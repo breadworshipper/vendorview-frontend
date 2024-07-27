@@ -23,7 +23,15 @@ const GoogleMapComponent = () => {
         </div>
       }
     >
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={30}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={30}
+        options={{
+          disableDefaultUI: true,
+        }}
+        // disableDefaultUI={true}
+      >
         <Marker position={center} />
       </GoogleMap>
     </LoadScript>

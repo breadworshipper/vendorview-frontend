@@ -56,7 +56,7 @@ const VendorModule = () => {
     callback: {
       onSuccess(data) {
         toast({ title: "Successfully add item." });
-        router.push(`/`);
+        router.push(`/vendor-dashboard`);
       },
       onError(error) {
         if (error instanceof AxiosError) {

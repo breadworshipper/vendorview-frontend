@@ -28,8 +28,11 @@ import useAxios from "@/components/api/use-axios";
 import { AxiosError } from "axios";
 import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
+import { useAtom } from "jotai";
+import { userAtom } from "@/components/jotai/user";
 
 const LoginModule = () => {
+  const [_, setUser] = useAtom(userAtom);
   const { toast } = useToast();
   const router = useRouter();
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -52,6 +55,32 @@ const LoginModule = () => {
     callback: {
       onSuccess(data) {
         localStorage.setItem("accessToken", data.access_token);
+        setHitGetUser(true);
+      },
+      onError(error) {
+        if (error instanceof AxiosError) {
+          toast({ title: "Failed to log in. Please try again." });
+        } else {
+          toast({ title: "Failed to log in. Please try again." });
+        }
+      },
+    },
+  });
+
+  const { setDoFetch: setHitGetUser } = useAxios<any>({
+    fetchOnRender: false,
+    isAuthorized: true,
+    method: "get",
+    url: "/auth/get-current-user",
+    body,
+    config: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+    callback: {
+      onSuccess(data) {
+        setUser(data);
         toast({ title: "Successfully signed in to account" });
         router.push(`/`);
       },

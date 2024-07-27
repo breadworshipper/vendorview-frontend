@@ -1,8 +1,12 @@
 import { z } from "zod";
 
 export const vendorSchema = z.object({
-  name: z.string(),
-  description: z.string(),
+  name: z.string().min(1, {
+    message: `Required`,
+  }),
+  description: z.string().min(1, {
+    message: `Required`,
+  }),
   price: z.union([
     z
       .string()
@@ -20,11 +24,13 @@ export const vendorSchema = z.object({
       message: "Price must be at least 0",
     }),
   ]),
-  illustration: z.any(),
+  illustration: z.instanceof(File, {
+    message: "Illustration must be a file",
+  }),
 });
 
 export const vendorSchemaArray = z.object({
-  vendorSchemaArray: z.array(vendorSchema).min(1, {
+  vendorArray: z.array(vendorSchema).min(1, {
     message: `You need to add at least 1 item`,
   }),
 });

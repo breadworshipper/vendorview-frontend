@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="size-full">
+    <div className='size-full'>
       <GoogleMapComponent />
     </div>
   );

@@ -25,11 +25,12 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "./schema";
 import useAxios from "@/components/api/use-axios";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 const LoginModule = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -50,15 +51,15 @@ const LoginModule = () => {
     },
     callback: {
       onSuccess(data) {
-        toast("Successfully signed in to account");
         localStorage.setItem("accessToken", data.access_token);
+        toast({ title: "Successfully signed in to account" });
         router.push(`/`);
       },
       onError(error) {
         if (error instanceof AxiosError) {
-          toast(error.response?.data?.responseMessage);
+          toast({ title: "Failed to log in. Please try again." });
         } else {
-          toast("Failed to log in. Please try again.");
+          toast({ title: "Failed to log in. Please try again." });
         }
       },
     },
@@ -131,7 +132,7 @@ const LoginModule = () => {
               </CardContent>
               <CardFooter>
                 <Button
-                  className='bg-dark-secondary/80 border-b-4 border-dark-secondary active:border-0 hover:bg-dark-secondary/90 font-extrabold text-white'
+                  className='bg-green-700 border-b-4 border-green-800 active:border-0 hover:bg-green-700/90 font-extrabold text-white'
                   type='submit'
                 >
                   Login

@@ -1,15 +1,18 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { TooltipProvider } from "./ui/tooltip";
 import SideNav from "@/section/navigation/side-nav/SideNav";
 import Header from "@/section/header/header";
 import { usePathname } from "next/navigation";
+import { useAtom } from "jotai";
+import { userAtom } from "./jotai/user";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const router = usePathname();
-  const loginRoute = router.startsWith("/login");
-  const registerRoute = router.startsWith("/register");
+  const path = usePathname();
+  const loginRoute = path.startsWith("/login");
+  const registerRoute = path.startsWith("/register");
 
   const showMap = !loginRoute && !registerRoute;
 
@@ -17,6 +20,18 @@ export default function Layout({ children }: { children: ReactNode }) {
   const toggleMenu = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const [user, setUser] = useAtom(userAtom);
+
+  const router = useRouter();
+  useEffect(() => {
+    if (user?.is_street_vendor) {
+      router.push("/vendor-dashboard");
+    } else if (localStorage.getItem("accessToken") == null) {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <main className="size-full">
       <TooltipProvider delayDuration={0}>

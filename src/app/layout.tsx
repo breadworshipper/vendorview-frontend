@@ -26,17 +26,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={cn(manrope.className, "h-screen w-screen")}>
-        <AuthProvider>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='light'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Layout>{children}</Layout>
-            <Toaster />
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='light'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Layout>{children}</Layout>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

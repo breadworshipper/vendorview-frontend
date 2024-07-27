@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +24,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import useAxios from "@/components/api/use-axios";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
+import Link from "next/link";
 
 const RegisterModule = () => {
   const router = useRouter();
@@ -31,74 +35,112 @@ const RegisterModule = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const handleRegisterButton = () => {
-    router.push("/login");
+  const [body, setBody] = useState<any>();
+
+  const { setDoFetch: setHitRegister } = useAxios<any>({
+    fetchOnRender: false,
+    isAuthorized: true,
+    method: "post",
+    url: "/auth/register",
+    body,
+    config: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+    callback: {
+      onSuccess(data) {
+        toast("Successfully registered account");
+        router.push(`/login`);
+      },
+      onError(error) {
+        if (error instanceof AxiosError) {
+          toast(error.response?.data?.responseMessage);
+        } else {
+          toast("Failed to register account. Please try again.");
+        }
+      },
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+    setBody(values);
+    setHitRegister(true);
   };
 
   return (
     <div className='flex w-full justify-center items-center h-full'>
       <Tabs defaultValue='Login' className='w-[500px]'>
         <Form {...registerForm}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Register</CardTitle>
-              <CardDescription>
-                Register your account here. Click register when you're done.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className='space-y-2'>
-              <div className='space-y-1'>
-                <FormField
-                  name='name'
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem className='space-y-1'>
-                      <FormLabel className='font-bold'>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Dave' className='' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className='space-y-1'>
-                <FormField
-                  name='password'
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem className='space-y-1'>
-                      <FormLabel className='font-bold '>Password</FormLabel>
-                      <FormControl>
-                        <Input className='' {...field} type='password' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className='space-y-1'>
-                <FormField
-                  name='confirmPassword'
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem className='space-y-1'>
-                      <FormLabel className='font-bold'>
-                        Confirm Password
-                      </FormLabel>
-                      <FormControl>
-                        <Input className='' {...field} type='password' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleRegisterButton}>Register</Button>
-            </CardFooter>
-          </Card>
+          <form
+            onSubmit={(e) => {
+              registerForm.handleSubmit(onSubmit)(e);
+            }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Register</CardTitle>
+                <CardDescription>
+                  Register your account here. Click register when you're done.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-2'>
+                <div className='space-y-1'>
+                  <FormField
+                    name='email'
+                    control={registerForm.control}
+                    render={({ field }) => (
+                      <FormItem className='space-y-1'>
+                        <FormLabel className='font-bold'>Email</FormLabel>
+                        <FormControl>
+                          <Input className='' {...field} type='email' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className='space-y-1'>
+                  <FormField
+                    name='name'
+                    control={registerForm.control}
+                    render={({ field }) => (
+                      <FormItem className='space-y-1'>
+                        <FormLabel className='font-bold'>Name</FormLabel>
+                        <FormControl>
+                          <Input className='' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className='space-y-1'>
+                  <FormField
+                    name='password'
+                    control={registerForm.control}
+                    render={({ field }) => (
+                      <FormItem className='space-y-1'>
+                        <FormLabel className='font-bold '>Password</FormLabel>
+                        <FormControl>
+                          <Input className='' {...field} type='password' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  className='bg-dark-secondary/80 border-b-4 border-dark-secondary active:border-0 hover:bg-dark-secondary/90 font-extrabold text-white'
+                  type='submit'
+                >
+                  Register
+                </Button>
+              </CardFooter>
+            </Card>
+          </form>
         </Form>
       </Tabs>
     </div>

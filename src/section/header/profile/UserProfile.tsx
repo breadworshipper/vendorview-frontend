@@ -8,33 +8,39 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
+  const router = useRouter();
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    router.push("/login");
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
-          size="icon"
-          className="overflow-hidden rounded-full"
+          variant='outline'
+          size='icon'
+          className='overflow-hidden rounded-full'
         >
           <Image
-            src="https://picsum.photos/200"
+            src='https://picsum.photos/200'
             width={36}
             height={36}
-            alt="Avatar"
-            className="overflow-hidden rounded-full"
+            alt='Avatar'
+            className='overflow-hidden rounded-full'
             priority={true}
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align='end'>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

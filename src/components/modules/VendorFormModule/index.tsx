@@ -68,30 +68,6 @@ const VendorModule = () => {
     },
   });
 
-  const onFileChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (!e.target.files) {
-      return;
-    }
-    const file = e.target.files[0];
-    if (file.size > MAX_FILE_SIZE) {
-      vendorForm.setError(`vendorSchemaArray.${index}.illustration`, {
-        type: "manual",
-        message: "File size exceeds 1MB limit",
-      });
-      return;
-    }
-    const updatedFiles = [...files];
-    updatedFiles[index] = e.target.files[0];
-    setFiles(updatedFiles);
-  };
-
-  const onClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    e.currentTarget.value = "";
-  };
-
   const toBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -105,16 +81,14 @@ const VendorModule = () => {
 
   const onSubmit = async (values: z.infer<typeof vendorSchemaArray>) => {
     const updatedValues = await Promise.all(
-      values.vendorSchemaArray.map(async (vendor, index) => {
-        if (files[index]) {
-          const base64Image = await toBase64(files[index]);
+      values.vendorArray.map(async (vendor) => {
+        if (vendor.illustration) {
+          const base64Image = await toBase64(vendor.illustration);
           return { ...vendor, illustration: base64Image as string };
         }
         return vendor;
       })
     );
-
-    console.log(updatedValues);
     setBody({ vendorSchemaArray: updatedValues });
     setHitVendor(true);
   };
@@ -124,26 +98,19 @@ const VendorModule = () => {
   };
 
   const handleDeleteVendorForm = (indexToDelete: number) => {
-    if (formVendorCount === 1) return; // Prevent deleting the last form
-
-    const updatedVendorSchemaArray = vendorForm.getValues()
-      .vendorSchemaArray as vendorFormInterface[];
-    const newVendorSchemaArray = updatedVendorSchemaArray.filter(
-      (_, index) => index !== indexToDelete
-    );
-
-    // Update form values
-    vendorForm.reset({
-      vendorSchemaArray: newVendorSchemaArray,
-    });
-
-    // Update the files state
-    const updatedFiles = [...files];
-    updatedFiles.splice(indexToDelete, 1);
-    setFiles(updatedFiles);
-
-    // Update the form vendor count
-    setFormVendorCount(formVendorCount - 1);
+    if (!(formVendorCount === 1)) {
+      setFormVendorCount((prevCount) => prevCount - 1);
+      const vendorFormArray = vendorForm.getValues()
+        .vendorArray as vendorFormInterface[];
+      if (vendorFormArray) {
+        const updatedVendorForm = vendorFormArray.filter(
+          (_, index) => index !== indexToDelete
+        );
+        vendorForm.reset({
+          vendorArray: updatedVendorForm,
+        });
+      }
+    }
   };
 
   return (
@@ -164,7 +131,7 @@ const VendorModule = () => {
               {[...Array(formVendorCount)].map((_, vendorIndex) => (
                 <CardContent className='space-y-2' key={vendorIndex}>
                   <FormField
-                    name={`vendorSchemaArray.${vendorIndex}.name`}
+                    name={`vendorArray.${vendorIndex}.name`}
                     control={vendorForm.control}
                     render={({ field }) => (
                       <FormItem className='space-y-1'>
@@ -177,7 +144,7 @@ const VendorModule = () => {
                     )}
                   />
                   <FormField
-                    name={`vendorSchemaArray.${vendorIndex}.description`}
+                    name={`vendorArray.${vendorIndex}.description`}
                     control={vendorForm.control}
                     render={({ field }) => (
                       <FormItem className='space-y-1'>
@@ -190,7 +157,7 @@ const VendorModule = () => {
                     )}
                   />
                   <FormField
-                    name={`vendorSchemaArray.${vendorIndex}.price`}
+                    name={`vendorArray.${vendorIndex}.price`}
                     control={vendorForm.control}
                     render={({ field }) => (
                       <FormItem className='space-y-1'>
@@ -207,7 +174,7 @@ const VendorModule = () => {
                     )}
                   />
                   <FormField
-                    name={`vendorSchemaArray.${vendorIndex}.illustration`}
+                    name={`vendorArray.${vendorIndex}.illustration`}
                     control={vendorForm.control}
                     render={({ field }) => (
                       <FormItem className='space-y-1'>
@@ -217,8 +184,9 @@ const VendorModule = () => {
                             type='file'
                             className='font-semibold'
                             accept='image/*'
-                            onClick={onClick}
-                            onChange={(e) => onFileChange(vendorIndex, e)}
+                            onChange={(e) =>
+                              field.onChange(e.target.files?.[0])
+                            }
                           />
                         </FormControl>
                         <FormMessage />

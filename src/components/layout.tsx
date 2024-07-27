@@ -8,7 +8,8 @@ import { usePathname } from "next/navigation";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const router = usePathname();
-  const isAuthRoute = router.startsWith("/auth");
+  const loginRoute = router.startsWith("/login");
+  const registerRoute = router.startsWith("/register");
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleMenu = () => {
@@ -18,7 +19,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <main className='size-full'>
       <TooltipProvider delayDuration={0}>
         <div className='size-full flex flex-row bg-muted/40'>
-          {!isAuthRoute && (
+          {!loginRoute && !registerRoute && (
             <SideNav
               links={[]}
               isCollapsed={isCollapsed}
@@ -26,7 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             />
           )}
           <div className='flex flex-col sm:gap-4 sm:py-4 size-full overflow-auto'>
-            {!isAuthRoute && <Header />}
+            {!loginRoute && !registerRoute && <Header />}
             <div className='flex-grow overflow-auto'>{children}</div>
           </div>
         </div>

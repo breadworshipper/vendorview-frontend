@@ -10,4 +10,10 @@ export const registerSchema = z.object({
   password: z.string().min(1, {
     message: `Required`,
   }),
+  category: z.string().min(1, {
+    message: `Required`,
+  }),
+  streetVendorName: z.string().min(1, {
+    message: `Required`,
+  }),
 });

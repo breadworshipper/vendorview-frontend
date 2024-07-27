@@ -11,6 +11,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const loginRoute = router.startsWith("/login");
   const registerRoute = router.startsWith("/register");
 
+  const showMap = !loginRoute && !registerRoute;
+
   const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleMenu = () => {
     setIsCollapsed(!isCollapsed);
@@ -18,8 +20,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <main className="size-full">
       <TooltipProvider delayDuration={0}>
-        <div className="size-full relative bg-muted/40">
-          {!loginRoute && !registerRoute && (
+        {showMap && (
+          <div className="size-full relative bg-muted/40">
             <div className="absolute z-50 w-full top-5">
               <SideNav
                 links={[]}
@@ -30,11 +32,12 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Header />
               </div>
             </div>
-          )}
-          <div className="relative size-full z-10 flex-grow overflow-auto">
-            {children}
+            <div className="relative size-full z-10 flex-grow overflow-auto">
+              {children}
+            </div>
           </div>
-        </div>
+        )}
+        {!showMap && <div className="size-full bg-muted/40">{children}</div>}
       </TooltipProvider>
     </main>
   );

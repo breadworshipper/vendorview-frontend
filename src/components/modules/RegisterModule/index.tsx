@@ -133,7 +133,7 @@ const RegisterModule = () => {
               </CardContent>
               <CardFooter>
                 <Button
-                  className='bg-dark-secondary/80 border-b-4 border-dark-secondary active:border-0 hover:bg-dark-secondary/90 font-extrabold text-white'
+                  className='bg-green-700 border-b-4 border-green-800 active:border-0 hover:bg-green-700/90 font-extrabold text-white'
                   type='submit'
                 >
                   Register

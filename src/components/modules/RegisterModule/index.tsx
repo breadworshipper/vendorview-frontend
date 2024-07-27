@@ -25,11 +25,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import useAxios from "@/components/api/use-axios";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
-import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 const RegisterModule = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -50,14 +50,14 @@ const RegisterModule = () => {
     },
     callback: {
       onSuccess(data) {
-        toast("Successfully registered account");
+        toast({ title: "Successfully registered account" });
         router.push(`/login`);
       },
       onError(error) {
         if (error instanceof AxiosError) {
-          toast(error.response?.data?.responseMessage);
+          toast({ title: "Failed to register account. Please try again." });
         } else {
-          toast("Failed to register account. Please try again.");
+          toast({ title: "Failed to register account. Please try again." });
         }
       },
     },

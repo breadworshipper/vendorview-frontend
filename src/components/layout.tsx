@@ -16,9 +16,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     setIsCollapsed(!isCollapsed);
   };
   return (
-    <main className="size-full">
+    <main className='size-full'>
       <TooltipProvider delayDuration={0}>
-        <div className="size-full flex flex-row bg-muted/40">
+        <div className='size-full flex flex-row bg-muted/40'>
           {!loginRoute && !registerRoute && (
             <SideNav
               links={[]}
@@ -26,13 +26,13 @@ export default function Layout({ children }: { children: ReactNode }) {
               toggleMenu={toggleMenu}
             />
           )}
-          <div className="relative sm:gap-4 size-full overflow-auto">
+          <div className='relative sm:gap-4 size-full overflow-auto'>
             {!loginRoute && !registerRoute && (
-              <div className="absolute z-50 w-full">
+              <div className='absolute z-50 w-full'>
                 <Header />
               </div>
             )}
-            <div className="relative size-full z-10 flex-grow overflow-auto">
+            <div className='relative size-full z-10 flex-grow overflow-auto'>
               {children}
             </div>
           </div>

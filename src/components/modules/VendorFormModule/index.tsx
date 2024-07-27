@@ -46,7 +46,7 @@ const VendorModule = () => {
     fetchOnRender: false,
     isAuthorized: true,
     method: "post",
-    url: "/auth/",
+    url: "/items/create",
     body,
     config: {
       headers: {
@@ -84,12 +84,12 @@ const VendorModule = () => {
       values.vendorArray.map(async (vendor) => {
         if (vendor.illustration) {
           const base64Image = await toBase64(vendor.illustration);
-          return { ...vendor, illustration: base64Image as string };
+          return { ...vendor, image_base64: base64Image as string };
         }
         return vendor;
       })
     );
-    setBody({ vendorSchemaArray: updatedValues });
+    setBody({ items: updatedValues });
     setHitVendor(true);
   };
 

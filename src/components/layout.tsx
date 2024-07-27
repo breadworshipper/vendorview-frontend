@@ -18,23 +18,21 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <main className="size-full">
       <TooltipProvider delayDuration={0}>
-        <div className="size-full flex flex-row bg-muted/40">
+        <div className="size-full relative bg-muted/40">
           {!loginRoute && !registerRoute && (
-            <SideNav
-              links={[]}
-              isCollapsed={isCollapsed}
-              toggleMenu={toggleMenu}
-            />
-          )}
-          <div className="relative sm:gap-4 size-full overflow-auto">
-            {!loginRoute && !registerRoute && (
-              <div className="absolute z-50 w-full">
+            <div className="absolute z-50 w-full top-5">
+              <SideNav
+                links={[]}
+                isCollapsed={isCollapsed}
+                toggleMenu={toggleMenu}
+              />
+              <div className="absolute z-50 top-0 right-0">
                 <Header />
               </div>
-            )}
-            <div className="relative size-full z-10 flex-grow overflow-auto">
-              {children}
             </div>
+          )}
+          <div className="relative size-full z-10 flex-grow overflow-auto">
+            {children}
           </div>
         </div>
       </TooltipProvider>

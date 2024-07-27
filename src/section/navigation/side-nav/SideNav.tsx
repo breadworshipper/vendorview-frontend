@@ -11,6 +11,7 @@ import { LayoutDashboard, Settings, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NavProps } from "../interface";
 import { cn } from "@/lib/utils";
+import MerchantCard from "@/components/MerchantCard";
 
 export default function SideNav({ links, isCollapsed, toggleMenu }: NavProps) {
   const sideNavContent = links.map((item, index) => {
@@ -27,14 +28,22 @@ export default function SideNav({ links, isCollapsed, toggleMenu }: NavProps) {
       <div
         data-collapsed={isCollapsed}
         className={cn(
-          "hidden inset-y-0 left-0 w-14 flex-col border-r bg-background sm:flex",
+          "inset-y-0 left-0 w-14 flex-col bg-transparent flex",
           !isCollapsed && "w-96"
         )}
       >
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+        <nav
+          className={cn(
+            "flex flex-col items-center gap-4 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2",
+            isCollapsed ? "" : "w-96"
+          )}
+        >
           <Link
             href="#"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground transition-colors md:h-8 md:w-8"
+            className={cn(
+              "flex h-9 items-center justify-start rounded-lg text-foreground transition-colors",
+              isCollapsed ? "w-full" : "w-full"
+            )}
           >
             <Button
               size="icon"
@@ -42,28 +51,19 @@ export default function SideNav({ links, isCollapsed, toggleMenu }: NavProps) {
               onClick={() => {
                 toggleMenu();
               }}
+              className={cn(
+                "w-full bg-white dark:bg-black dark:text-white shadow-md",
+                isCollapsed ? "" : ""
+              )}
             >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle Menu</span>
             </Button>
           </Link>
+          <div className={cn(isCollapsed ? "" : "w-full")}>
+            <MerchantCard isCollapsed={isCollapsed} />
+          </div>
           {sideNavContent}
-        </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Settings className="h-5 w-5" />
-                  <span className="sr-only">Settings</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Settings</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </nav>
       </div>
     </>

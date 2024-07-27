@@ -60,9 +60,9 @@ const useAxios = <T>({
   };
 
   const refreshToken = async () => {
-    const response = await baseAxios.get("/api/auth/refresh", {
+    const response = await baseAxios.get("/auth/login", {
       headers: {
-        authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
 

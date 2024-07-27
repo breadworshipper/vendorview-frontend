@@ -24,32 +24,32 @@ export default function UserProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex gap-4 cursor-pointer">
-          <span className="hidden sm:flex items-center font-bold">{`hello, ${"username"}`}</span>
+        <div className='flex gap-4 cursor-pointer'>
+          <span className='hidden sm:flex items-center font-bold'>{`hello, ${"username"}`}</span>
           <Button
-            variant="outline"
-            size="icon"
-            className="overflow-hidden rounded-full"
+            variant='outline'
+            size='icon'
+            className='overflow-hidden rounded-full'
           >
             <Image
-              src="https://picsum.photos/200"
+              src='https://picsum.photos/200'
               width={36}
               height={36}
-              alt="Avatar"
-              className="overflow-hidden rounded-full"
+              alt='Avatar'
+              className='overflow-hidden rounded-full'
               priority={true}
             />
           </Button>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" sideOffset={10}>
+      <DropdownMenuContent align='center' sideOffset={10}>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuItem asChild>
           <div
-            className="flex gap-3"
+            className='flex gap-3'
             onClick={() => setTheme(theme == "light" ? "dark" : "light")}
           >
             <span>Dark Mode</span> <Switch checked={theme == "dark"} />

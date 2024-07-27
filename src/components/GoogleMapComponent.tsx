@@ -1,9 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  OverlayView,
+} from "@react-google-maps/api";
 import Loading from "./Loading";
 import { useTheme } from "next-themes";
 import { useToast } from "./ui/use-toast";
+import { Badge } from "./ui/badge";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import { useAtom } from "jotai";
+import { currentSelectedVendorAtom } from "./jotai/vendor";
 
 const containerStyle = {
   width: "100%",
@@ -21,6 +30,10 @@ const GoogleMapComponent = () => {
   const handleLocationChange = (location: GeolocationPosition) => {
     setLocation(location);
   };
+
+  const [currentSelectedVendor, setCurrentSelectedVendor] = useAtom(
+    currentSelectedVendorAtom
+  );
   useEffect(() => {
     function getLocation() {
       if (navigator.geolocation) {
@@ -166,6 +179,67 @@ const GoogleMapComponent = () => {
               : center
           }
         />
+        {/* insert loop later for locations */}
+        <OverlayView
+          position={
+            location
+              ? {
+                  lat: location.coords.latitude,
+                  lng: location.coords.longitude,
+                }
+              : center
+          }
+          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        >
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                className="w-max p-2 shadow-xl"
+                onClick={() => {
+                  setCurrentSelectedVendor({
+                    name: "234",
+                    tag: "adsfaf",
+                  });
+                }}
+              >
+                <span className="text-md">Vendor name</span>
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent asChild>
+              <div className="w-56 h-10">asdofij</div>
+            </TooltipContent>
+          </Tooltip>
+        </OverlayView>
+        <OverlayView
+          position={
+            location
+              ? {
+                  lat: location.coords.latitude + 0.0001,
+                  lng: location.coords.longitude,
+                }
+              : center
+          }
+          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        >
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                className="w-max p-2 shadow-xl"
+                onClick={() => {
+                  setCurrentSelectedVendor({
+                    name: "adsf",
+                    tag: "3242",
+                  });
+                }}
+              >
+                <span className="text-md">Vendor name</span>
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent asChild>
+              <div className="w-56 h-10">asdofij</div>
+            </TooltipContent>
+          </Tooltip>
+        </OverlayView>
       </GoogleMap>
     </LoadScript>
   );

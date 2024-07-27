@@ -12,27 +12,28 @@ import { Button } from "@/components/ui/button";
 import { NavProps } from "../interface";
 import { cn } from "@/lib/utils";
 import MerchantCard from "@/components/MerchantCard";
+import { useAtom } from "jotai";
+import { currentSelectedVendorAtom } from "@/components/jotai/vendor";
+import { useEffect } from "react";
 
-export default function SideNav({ links, isCollapsed, toggleMenu }: NavProps) {
-  const sideNavContent = links.map((item, index) => {
-    return (
-      <SideNavItem
-        data={item}
-        isCollapsed={isCollapsed}
-        key={`${index}-sidenav-item`}
-      />
-    );
-  });
+export default function SideNav() {
+  const [currentSelectedVendor, setCurrentSelectedVendor] = useAtom(
+    currentSelectedVendorAtom
+  );
+
+  useEffect(() => {
+    console.log(currentSelectedVendor);
+  }, [currentSelectedVendor]);
   return (
     <>
       <div
-        data-collapsed={isCollapsed}
+        // data-collapsed={isCollapsed}
         className={cn(
-          "inset-y-0 left-0 w-14 flex-col bg-transparent flex",
-          !isCollapsed && "w-96"
+          "bg-background relative  w-full md:w-96"
+          // !isCollapsed && "w-96"
         )}
       >
-        <nav
+        {/* <nav
           className={cn(
             "flex flex-col items-center gap-4 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2",
             isCollapsed ? "" : "w-96"
@@ -63,8 +64,17 @@ export default function SideNav({ links, isCollapsed, toggleMenu }: NavProps) {
           <div className={cn(isCollapsed ? "" : "w-full")}>
             <MerchantCard isCollapsed={isCollapsed} />
           </div>
-          {sideNavContent}
-        </nav>
+        </nav> */}
+        {currentSelectedVendor ? (
+          <MerchantCard
+            currentVendor={currentSelectedVendor}
+            closeCurrentVendor={() => {
+              setCurrentSelectedVendor(null);
+            }}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );

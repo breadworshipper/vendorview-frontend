@@ -55,7 +55,7 @@ const LoginModule = () => {
     callback: {
       onSuccess(data) {
         localStorage.setItem("accessToken", data.access_token);
-        router.push("/");
+        setHitGetCurrentUser(true);
       },
       onError(error) {
         if (error instanceof AxiosError) {
@@ -63,6 +63,27 @@ const LoginModule = () => {
         } else {
           toast({ title: "Failed to log in. Please try again." });
         }
+      },
+    },
+  });
+
+  const { setDoFetch: setHitGetCurrentUser } = useAxios<any>({
+    method: "get",
+    url: "/auth/get-current-user",
+    fetchOnRender: true,
+    isAuthorized: true,
+    callback: {
+      onSuccess(data) {
+        setUser(data);
+        if (data.is_street_vendor) {
+          router.push("/vendor-dashboard");
+        } else {
+          router.push("/");
+        }
+        toast({ title: "Succesfully logged in to account." });
+      },
+      onError(error) {
+        setUser(null);
       },
     },
   });

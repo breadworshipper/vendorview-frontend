@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const path = usePathname();
   const loginRoute = path.startsWith("/login");
   const registerRoute = path.startsWith("/register");
+  const vendorDashboardRoute = path.startsWith("/vendor-dashboard");
 
   const showMap = !loginRoute && !registerRoute;
 
@@ -25,13 +26,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [user, setUser] = useAtom(userAtom);
 
   const router = useRouter();
-  useEffect(() => {
-    if (user?.is_street_vendor) {
-      router.push("/vendor-dashboard");
-    } else if (localStorage.getItem("accessToken") == null) {
-      router.push("/login");
-    }
-  }, []);
 
   useAxios<any>({
     method: "get",
@@ -41,6 +35,11 @@ export default function Layout({ children }: { children: ReactNode }) {
     callback: {
       onSuccess(data) {
         setUser(data);
+        if (data.is_street_vendor) {
+          router.push("/vendor-dashboard");
+        } else if (localStorage.getItem("accessToken") == null) {
+          router.push("/login");
+        }
       },
       onError(error) {
         setUser(null);
@@ -48,26 +47,37 @@ export default function Layout({ children }: { children: ReactNode }) {
     },
   });
 
+  useEffect(() => {
+    if (user?.is_street_vendor) {
+      router.push("/vendor-dashboard");
+    } else if (localStorage.getItem("accessToken") == null) {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <main className='size-full'>
       <TooltipProvider delayDuration={0}>
-        {showMap && (
-          <div className='size-full relative bg-muted/40'>
-            <div className='absolute z-50 w-full top-5'>
+        <div className='size-full relative bg-muted/40'>
+          <div className='absolute z-50 w-full top-5'>
+            {showMap && !vendorDashboardRoute && (
               <SideNav
                 links={[]}
                 isCollapsed={isCollapsed}
                 toggleMenu={toggleMenu}
               />
+            )}
+            {showMap && (
               <div className='absolute z-50 top-0 right-0'>
                 <Header />
               </div>
-            </div>
-            <div className='relative size-full z-10 flex-grow overflow-auto'>
-              {children}
-            </div>
+            )}
           </div>
-        )}
+          <div className='relative size-full z-10 flex-grow overflow-auto'>
+            {children}
+          </div>
+        </div>
+
         {!showMap && <div className='size-full bg-muted/40'>{children}</div>}
       </TooltipProvider>
     </main>

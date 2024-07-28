@@ -17,6 +17,8 @@ const VendorSellingModule = () => {
   const [isSelling, setIsSelling] = useState<boolean>(false);
   const [isMoving, setIsMoving] = useState<boolean>(false);
 
+  const [location, setLocation] = useState<GeolocationPosition | null>(null);
+
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
 
@@ -65,14 +67,12 @@ const VendorSellingModule = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          setLatitude(latitude);
-          setLongitude(longitude);
+          setLocation(position);
           sendJsonMessage({
             event: "locationUpdate",
             data: {
-              latitude,
-              longitude,
+              lat: position?.coords.latitude,
+              long: position?.coords.longitude,
             },
           });
         },
@@ -119,136 +119,11 @@ const VendorSellingModule = () => {
 
   return (
     <div className='flex flex-col justify-center items-center w-full h-full gap-10'>
-      <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
-        loadingElement={
-          <div className='size-full flex items-center justify-center'>
-            <Loading size='w-10 h-10' />
-          </div>
-        }
-      >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={
-            latitude !== null && longitude !== null
-              ? {
-                  lat: latitude,
-                  lng: longitude,
-                }
-              : center
-          }
-          zoom={17}
-          options={{
-            styles:
-              theme == "light"
-                ? null
-                : theme == "dark"
-                ? [
-                    {
-                      elementType: "geometry",
-                      stylers: [{ color: "#242f3e" }],
-                    },
-                    {
-                      elementType: "labels.text.stroke",
-                      stylers: [{ color: "#242f3e" }],
-                    },
-                    {
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#746855" }],
-                    },
-                    {
-                      featureType: "administrative.locality",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#d59563" }],
-                    },
-                    {
-                      featureType: "poi",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#d59563" }],
-                    },
-                    {
-                      featureType: "poi.park",
-                      elementType: "geometry",
-                      stylers: [{ color: "#263c3f" }],
-                    },
-                    {
-                      featureType: "poi.park",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#6b9a76" }],
-                    },
-                    {
-                      featureType: "road",
-                      elementType: "geometry",
-                      stylers: [{ color: "#38414e" }],
-                    },
-                    {
-                      featureType: "road",
-                      elementType: "geometry.stroke",
-                      stylers: [{ color: "#212a37" }],
-                    },
-                    {
-                      featureType: "road",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#9ca5b3" }],
-                    },
-                    {
-                      featureType: "road.highway",
-                      elementType: "geometry",
-                      stylers: [{ color: "#746855" }],
-                    },
-                    {
-                      featureType: "road.highway",
-                      elementType: "geometry.stroke",
-                      stylers: [{ color: "#1f2835" }],
-                    },
-                    {
-                      featureType: "road.highway",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#f3d19c" }],
-                    },
-                    {
-                      featureType: "transit",
-                      elementType: "geometry",
-                      stylers: [{ color: "#2f3948" }],
-                    },
-                    {
-                      featureType: "transit.station",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#d59563" }],
-                    },
-                    {
-                      featureType: "water",
-                      elementType: "geometry",
-                      stylers: [{ color: "#17263c" }],
-                    },
-                    {
-                      featureType: "water",
-                      elementType: "labels.text.fill",
-                      stylers: [{ color: "#515c6d" }],
-                    },
-                    {
-                      featureType: "water",
-                      elementType: "labels.text.stroke",
-                      stylers: [{ color: "#17263c" }],
-                    },
-                  ]
-                : null,
-            disableDefaultUI: true,
-          }}
-          // disableDefaultUI={true}
-        >
-          <Marker
-            position={
-              latitude !== null && longitude !== null
-                ? {
-                    lat: latitude,
-                    lng: longitude,
-                  }
-                : center
-            }
-          />
-        </GoogleMap>
-      </LoadScript>
+      <div>
+        <h1 className='text-4xl font-extrabold'>
+          {isMoving ? "Waiting...." : "Broadcasting...."}
+        </h1>
+      </div>
       <div className='flex flex-row gap-10'>
         <Button
           onClick={handleStopSelling}
@@ -260,7 +135,7 @@ const VendorSellingModule = () => {
           onClick={handleToggleMoving}
           className='bg-accents-light/80 border-b-4 border-accents-light active:border-0 hover:bg-accents-light/90 font-extrabold text-white'
         >
-          {isMoving ? "Stop Moving" : "Start Moving"}
+          {isMoving ? "Start Moving " : "Stop Moving"}
         </Button>
       </div>
     </div>

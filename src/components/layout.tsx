@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useAtom } from "jotai";
 import { userAtom } from "./jotai/user";
 import { useRouter } from "next/navigation";
+import useAxios from "./api/use-axios";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -32,6 +33,21 @@ export default function Layout({ children }: { children: ReactNode }) {
     //   router.push("/login");
     // }
   }, []);
+
+  useAxios<any>({
+    method: "get",
+    url: "/auth/get-current-user",
+    fetchOnRender: true,
+    isAuthorized: true,
+    callback: {
+      onSuccess(data) {
+        setUser(data);
+      },
+      onError(error) {
+        setUser(null);
+      },
+    },
+  });
 
   return (
     <main className="size-full">

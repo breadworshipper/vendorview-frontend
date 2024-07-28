@@ -6,11 +6,16 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Loading from "@/components/Loading";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+import useAxios from "@/components/api/use-axios";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const VendorSellingModule = () => {
+  const { toast } = useToast();
   const router = useRouter();
-  const [isSelling, setIsSelling] = useState<boolean>(true);
-  const [isMoving, setIsMoving] = useState<boolean>(true);
+  const [isSelling, setIsSelling] = useState<boolean>(false);
+  const [isMoving, setIsMoving] = useState<boolean>(false);
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
@@ -24,6 +29,36 @@ const VendorSellingModule = () => {
   const { sendJsonMessage, readyState } = useWebSocket(WS_URL, {
     share: false,
     shouldReconnect: () => true,
+  });
+
+  const { setDoFetch: setHitDisconnect } = useAxios<any>({
+    fetchOnRender: false,
+    isAuthorized: true,
+    method: "delete",
+    url: `/tracking/disconnect-street-vendor`,
+    config: {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: jwt,
+      },
+    },
+    callback: {
+      onSuccess(data) {
+        router.push("/vendor-dashboard");
+        toast({ title: "Succesfully disconect from server" });
+      },
+      onError(error) {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Failed to disconect from server. Please try again.",
+          });
+        } else {
+          toast({
+            title: "Failed to disconect from server. Please try again.",
+          });
+        }
+      },
+    },
   });
 
   const sendLocation = () => {
@@ -52,7 +87,7 @@ const VendorSellingModule = () => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (readyState === ReadyState.OPEN && isMoving && isSelling) {
+    if (readyState === ReadyState.OPEN && !isMoving && !isSelling) {
       sendLocation();
       interval = setInterval(sendLocation, 300000);
     }
@@ -62,22 +97,12 @@ const VendorSellingModule = () => {
   }, [readyState, isMoving, isSelling]);
 
   const handleStopSelling = () => {
-    // setIsSelling(false);
-    // if (readyState === ReadyState.OPEN) {
-    //   sendJsonMessage({
-    //     event: "stopSelling",
-    //   });
-    // }
-    router.push("/vendor-dashboard");
+    setIsSelling(true);
+    setHitDisconnect(true);
   };
 
   const handleToggleMoving = () => {
     setIsMoving(!isMoving);
-    if (readyState === ReadyState.OPEN) {
-      sendJsonMessage({
-        event: isMoving ? "stopMoving" : "startMoving",
-      });
-    }
   };
 
   const center = {

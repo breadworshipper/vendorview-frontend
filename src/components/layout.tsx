@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const path = usePathname();
   const loginRoute = path.startsWith("/login");
   const registerRoute = path.startsWith("/register");
+  const vendorDashboardRoute = path.startsWith("/vendor-dashboard");
 
   const showMap = !loginRoute && !registerRoute;
 
@@ -42,6 +43,11 @@ export default function Layout({ children }: { children: ReactNode }) {
     callback: {
       onSuccess(data) {
         setUser(data);
+        if (data.is_street_vendor) {
+          router.push("/vendor-dashboard");
+        } else if (localStorage.getItem("accessToken") == null) {
+          router.push("/login");
+        }
       },
       onError(error) {
         setUser(null);
@@ -49,23 +55,31 @@ export default function Layout({ children }: { children: ReactNode }) {
     },
   });
 
+  useEffect(() => {
+    if (user?.is_street_vendor) {
+      router.push("/vendor-dashboard");
+    } else if (localStorage.getItem("accessToken") == null) {
+      router.push("/login");
+    }
+  }, []);
+
   return (
-    <main className="size-full">
+    <main className='size-full'>
       <TooltipProvider delayDuration={0}>
         {showMap && (
-          <div className="size-full relative bg-muted/40">
-            <div className="fixed z-50 bottom-5 w-full px-5 md:px-0 md:left-5 md:w-max md:top-5 h-max">
+          <div className='size-full relative bg-muted/40'>
+            <div className='fixed z-50 bottom-5 w-full px-5 md:px-0 md:left-5 md:w-max md:top-5 h-max'>
               <SideNav />
             </div>
-            <div className="fixed z-50 top-5 right-0">
+            <div className='fixed z-50 top-5 right-0'>
               <Header />
             </div>
-            <div className="relative size-full z-10 flex-grow overflow-auto">
+            <div className='relative size-full z-10 flex-grow overflow-auto'>
               {children}
             </div>
           </div>
         )}
-        {!showMap && <div className="size-full bg-muted/40">{children}</div>}
+        {!showMap && <div className='size-full bg-muted/40'>{children}</div>}
       </TooltipProvider>
     </main>
   );

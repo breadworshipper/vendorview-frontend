@@ -57,8 +57,8 @@ const GoogleMapComponent = () => {
     <LoadScript
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
       loadingElement={
-        <div className="size-full flex items-center justify-center">
-          <Loading size="w-10 h-10" />
+        <div className='size-full flex items-center justify-center'>
+          <Loading size='w-10 h-10' />
         </div>
       }
     >

@@ -150,7 +150,7 @@ const GoogleMapComponent = () => {
       fetchNearbyVendors();
 
       // Set up interval to fetch every 5 minutes
-      const interval = setInterval(fetchNearbyVendors, 5 * 60 * 1000);
+      const interval = setInterval(fetchNearbyVendors, 1 * 60 * 1000);
 
       // Clean up the interval on component unmount
       return () => clearInterval(interval);

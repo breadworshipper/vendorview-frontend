@@ -11,7 +11,7 @@ const VendorDashboardModule = () => {
   };
 
   const handleSellingRoute = () => {
-    router.push("/");
+    router.push("/vendor-selling");
   };
 
   return (

@@ -70,10 +70,8 @@ const VendorSellingModule = () => {
           setLocation(position);
           sendJsonMessage({
             event: "locationUpdate",
-            data: {
-              lat: position?.coords.latitude,
-              long: position?.coords.longitude,
-            },
+            lat: position?.coords.latitude,
+            lon: position?.coords.longitude,
           });
         },
         (error) => {
@@ -121,7 +119,7 @@ const VendorSellingModule = () => {
     <div className="flex flex-col justify-center items-center w-full h-full gap-10">
       <div>
         <h1 className="text-4xl font-extrabold">
-          {isMoving ? "Waiting...." : "Broadcasting...."}
+          {isMoving ? "Idling...." : "Broadcasting...."}
         </h1>
       </div>
       <div className="flex flex-row gap-10">

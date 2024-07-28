@@ -28,7 +28,9 @@ export default function UserProfile() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex gap-4 cursor-pointer">
-          <span className="hidden sm:flex items-center font-bold">{`hello, ${user?.name}`}</span>
+          <span className="hidden sm:flex items-center font-bold">{`hello, ${
+            user?.name || ""
+          }`}</span>
           <Button
             variant="outline"
             size="icon"
@@ -46,10 +48,6 @@ export default function UserProfile() {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" sideOffset={10}>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuItem asChild>
           <div
             className="flex gap-3"

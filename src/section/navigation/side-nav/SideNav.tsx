@@ -21,9 +21,7 @@ export default function SideNav() {
     currentSelectedVendorAtom
   );
 
-  useEffect(() => {
-    console.log(currentSelectedVendor);
-  }, [currentSelectedVendor]);
+  useEffect(() => {}, [currentSelectedVendor]);
   return (
     <>
       <div

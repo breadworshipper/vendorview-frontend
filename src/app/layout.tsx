@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
+
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
+import { Toaster } from "@/components/ui/toaster";
+import Layout from "@/components/layout";
+import { cn } from "@/lib/utils";
+
 const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Vendorview",
@@ -18,14 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn(manrope.className, "h-screen w-screen")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <main>{children}</main>
+          <Layout>{children}</Layout>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,11 @@
-import { ModeToggle } from "@/components/toggle-theme";
+import GoogleMapComponent from "@/components/GoogleMapComponent";
+
 import Image from "next/image";
 
 export default function Home() {
-  return <ModeToggle></ModeToggle>;
+  return (
+    <div className='size-full'>
+      <GoogleMapComponent />
+    </div>
+  );
 }

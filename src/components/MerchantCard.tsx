@@ -3,14 +3,14 @@ import { Badge } from "./ui/badge";
 import { Accordion, AccordionContent, AccordionItem } from "./ui/accordion";
 import { AccordionTrigger } from "@radix-ui/react-accordion";
 import { Button } from "./ui/button";
-import { vendor } from "./jotai/vendor";
+import { currentSelectedVendor, vendor } from "./jotai/vendor";
 import { XCircleIcon } from "lucide-react";
 
 const MerchantCard = ({
   currentVendor,
   closeCurrentVendor,
 }: {
-  currentVendor: vendor;
+  currentVendor: currentSelectedVendor;
   closeCurrentVendor: Function;
 }) => {
   return (
@@ -40,11 +40,17 @@ const MerchantCard = ({
               <Button>show menu</Button>
             </AccordionTrigger>
             <AccordionContent asChild>
-              <div className="flex justify-between w-full h-max p-4 gap-2 border border-slate-400 rounded-md">
-                <span className="max-w-full text-ellipsis overflow-hidden">
-                  Menu nameasdfasedfasdfasdfawefwaef
-                </span>
-                <span>Menu price</span>
+              <div className="flex flex-col justify-start w-full h-max p-4 gap-2 border border-slate-400 rounded-md">
+                {currentVendor.menu.map((item, index) => {
+                  return (
+                    <div className="flex w-full justify-between">
+                      <span className="max-w-full text-ellipsis overflow-hidden">
+                        {item.name}
+                      </span>
+                      <span>{item.price}</span>
+                    </div>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

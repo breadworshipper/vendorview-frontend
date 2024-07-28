@@ -15,8 +15,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   const loginRoute = path.startsWith("/login");
   const registerRoute = path.startsWith("/register");
   const vendorDashboardRoute = path.startsWith("/vendor-dashboard");
+  const indexRoute = path === "/";
 
-  const showMap = !loginRoute && !registerRoute;
+  const showMap = indexRoute;
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleMenu = () => {
@@ -64,22 +65,22 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <main className='size-full'>
+    <main className="size-full">
       <TooltipProvider delayDuration={0}>
-        {showMap && (
-          <div className='size-full relative bg-muted/40'>
-            <div className='fixed z-50 bottom-5 w-full px-5 md:px-0 md:left-5 md:w-max md:top-5 h-max'>
+        <div className="size-full relative bg-muted/40">
+          {showMap && (
+            <div className="fixed z-50 bottom-5 w-full px-5 md:px-0 md:left-5 md:w-max md:top-5 h-max">
               <SideNav />
             </div>
-            <div className='fixed z-50 top-5 right-0'>
-              <Header />
-            </div>
-            <div className='relative size-full z-10 flex-grow overflow-auto'>
-              {children}
-            </div>
+          )}
+          <div className="fixed z-50 top-5 right-0">
+            <Header />
           </div>
-        )}
-        {!showMap && <div className='size-full bg-muted/40'>{children}</div>}
+          <div className="relative size-full z-10 flex-grow overflow-auto">
+            {children}
+          </div>
+        </div>
+        {/* {!showMap && <div className="size-full bg-muted/40">{children}</div>} */}
       </TooltipProvider>
     </main>
   );

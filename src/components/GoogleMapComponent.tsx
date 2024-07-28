@@ -314,8 +314,6 @@ const GoogleMapComponent = () => {
         }
       />
       {nearbyVendor?.map((item, index) => {
-        console.log(item.lat, item.lng);
-        console.log(location?.coords.latitude, location?.coords.longitude);
         return (
           <OverlayView
             key={`${index}-vendor-marker`}

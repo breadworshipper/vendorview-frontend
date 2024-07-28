@@ -118,22 +118,22 @@ const VendorSellingModule = () => {
   const { theme } = useTheme();
 
   return (
-    <div className='flex flex-col justify-center items-center w-full h-full gap-10'>
+    <div className="flex flex-col justify-center items-center w-full h-full gap-10">
       <div>
-        <h1 className='text-4xl font-extrabold'>
+        <h1 className="text-4xl font-extrabold">
           {isMoving ? "Waiting...." : "Broadcasting...."}
         </h1>
       </div>
-      <div className='flex flex-row gap-10'>
+      <div className="flex flex-row gap-10">
         <Button
           onClick={handleStopSelling}
-          className='bg-accents-blue/80 border-b-4 border-accents-blue active:border-0 hover:bg-accents-blue/90 font-extrabold text-white'
+          className="bg-accents-blue/80 border-b-4 border-accents-blue active:border-0 hover:bg-accents-blue/90 font-extrabold text-white"
         >
           Stop Selling
         </Button>
         <Button
           onClick={handleToggleMoving}
-          className='bg-accents-light/80 border-b-4 border-accents-light active:border-0 hover:bg-accents-light/90 font-extrabold text-white'
+          className="bg-accents-light/80 border-b-4 border-accents-light active:border-0 hover:bg-accents-light/90 font-extrabold text-white"
         >
           {isMoving ? "Start Moving " : "Stop Moving"}
         </Button>

@@ -73,7 +73,6 @@ const GoogleMapComponent = () => {
     isAuthorized: true,
     callback: {
       onSuccess(data: any) {
-        console.log(data);
         if (!currentVendor) {
           return;
         }
@@ -119,7 +118,6 @@ const GoogleMapComponent = () => {
     isAuthorized: true,
     callback: {
       onSuccess(data) {
-        console.log(data);
         setNearbyVendor(
           data.map((item: any) => {
             const vendor: NearbyVendor = {
@@ -316,13 +314,14 @@ const GoogleMapComponent = () => {
         }
       />
       {nearbyVendor?.map((item, index) => {
-        console.log(item);
+        console.log(item.lat, item.lng);
+        console.log(location?.coords.latitude, location?.coords.longitude);
         return (
           <OverlayView
             key={`${index}-vendor-marker`}
             position={{
-              lat: item.lat,
-              lng: item.lng,
+              lat: item.lng,
+              lng: item.lat,
             }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
@@ -334,7 +333,6 @@ const GoogleMapComponent = () => {
                     setCurrentVendor(item);
                     setVendorId(item.id);
                     setHitGetItem(true);
-                    console.log(item);
                   }}
                 >
                   <span className="text-md">{item.name}</span>

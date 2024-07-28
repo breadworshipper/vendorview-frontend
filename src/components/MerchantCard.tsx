@@ -13,13 +13,28 @@ const MerchantCard = ({
   currentVendor: currentSelectedVendor;
   closeCurrentVendor: Function;
 }) => {
+  function numberToRupiah(num: number): string {
+    return num.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  }
+
+  function toTitleCase(str: string): string {
+    return str
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
   return (
     <div className="w-full h-max border-2  border-slate-500 dark:bg-black rounded-md relative gap-2">
       <div className="flex flex-col w-full h-max gap-4 p-4">
-        <div className="flex justify-between w-full">
+        <div className="flex flex-wrap justify-center gap-4 sm:justify-between w-full">
           <div className="flex flex-col">
             <span className="font-extrabold">{currentVendor.name}</span>
-            <Badge className="w-max">{currentVendor.tag}</Badge>
+            <Badge className="w-max">{toTitleCase(currentVendor.tag)}</Badge>
           </div>
           <div className="flex">
             <Image
@@ -47,7 +62,7 @@ const MerchantCard = ({
                       <span className="max-w-full text-ellipsis overflow-hidden">
                         {item.name}
                       </span>
-                      <span>{item.price}</span>
+                      <span>{numberToRupiah(item.price)}</span>
                     </div>
                   );
                 })}

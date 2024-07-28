@@ -1,4 +1,5 @@
 "use client";
+import { userAtom } from "@/components/jotai/user";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
+import { useAtom } from "jotai";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,13 +21,14 @@ export default function UserProfile() {
     localStorage.removeItem("accessToken");
     router.push("/login");
   };
+
+  const [user, setUser] = useAtom(userAtom);
   const { theme, setTheme } = useTheme();
-  console.log(theme);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex gap-4 cursor-pointer">
-          <span className="hidden sm:flex items-center font-bold">{`hello, ${"username"}`}</span>
+          <span className="hidden sm:flex items-center font-bold">{`hello, ${user?.name}`}</span>
           <Button
             variant="outline"
             size="icon"
